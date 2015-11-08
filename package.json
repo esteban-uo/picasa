@@ -1,0 +1,28 @@
+{
+  "name": "picasa",
+  "version": "0.0.0",
+  "description": "Picasa web albums client for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esteban-uo/picasa.git"
+  },
+  "keywords": [
+    "picasa",
+    "web",
+    "album",
+    "data",
+    "api",
+    "client",
+    "node"
+  ],
+  "author": "Esteban Uscanga Olea <uscanga47@gmail.com> (https://github.com/esteban-uo)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esteban-uo/picasa/issues"
+  },
+  "homepage": "https://github.com/esteban-uo/picasa#readme"
+}
