@@ -4,7 +4,8 @@
   "description": "Picasa web albums client for node",
   "main": "src/picasa.js",
   "scripts": {
-    "test": "mocha src/ --harmony",
+    "test": "mocha src/ --harmony -t 6000",
+    "test-debug": "mocha src/ --harmony -t 6000  --debug-brk",
     "test-watch": "mocha src/ --harmony --watch"
   },
   "repository": {
@@ -33,6 +34,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "xml2js": "^0.4.15"
   }
 }
