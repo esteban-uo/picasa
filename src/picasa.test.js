@@ -11,15 +11,21 @@ const expect = chai.expect
 chai.use(sinonChai)
 
 describe('Picasa', () => {
+  let picasa
+
+  beforeEach(() => {
+    const clientSecret = 'client_secretABC'
+    const redirectURL = 'http://localhost'
+    const clientId = 'apps.google.com'
+
+    picasa = new Picasa(clientId, redirectURL)
+  })
+
   describe('getPhotos', () => {
     it('returns an array of photos', (done) => {
-      const clientSecret = 'r0AqYRKCYevJzxWzxnCmhKfE'
-      const redirectURL = 'http://99fff1f0.ngrok.io'
-      const clientId = '328825088743-qhksb2d0troqbfl05be85dfp05724kev.apps.googleusercontent.com'
+      const accessToken = 'ya29.OQKSGT56u8nnvO8XJiCmtNZPJqydwIlVrmbol0SDBQ-x3Y_SZZeVHrsfD1G2Rad4k0j0VQ'
 
-      const picasa = new Picasa(clientId, redirectURL)
-
-      picasa.getPhotos('ya29.OQKSGT56u8nnvO8XJiCmtNZPJqydwIlVrmbol0SDBQ-x3Y_SZZeVHrsfD1G2Rad4k0j0VQ', (error, photos) => {
+      picasa.getPhotos(accessToken, (error, photos) => {
         expect(error).to.be.equals(null)
 
         // https://lh3.googleusercontent.com/aaaaa/aaaaa/aaaaaaa/aaaaa/2015-11-23.jpg
@@ -33,12 +39,6 @@ describe('Picasa', () => {
 
   describe('getAuthURL', () => {
     it('returns valid URI', () => {
-      const clientSecret = 'client_secretABC'
-      const redirectURL = 'http://localhost'
-      const clientId = 'apps.google.com'
-
-      const picasa = new Picasa(clientId, redirectURL)
-
       expect(picasa.getAuthURL())
         .to.be.equals('https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&response_type=code&client_id=apps.google.com&redirect_uri=http%3A%2F%2Flocalhost')
     })
