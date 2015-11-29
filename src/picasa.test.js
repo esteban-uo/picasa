@@ -74,7 +74,7 @@ describe('Picasa', () => {
 
           const requestOptions = stub.firstCall.args[1]
 
-          expect(requestOptions.url).to.equal(`https://picasaweb.google.com/data/feed/api/user/default?max-results=1&alt=json&kind=photo&access_token=${accessToken}`)
+          expect(requestOptions.url).to.equal(`https://picasaweb.google.com/data/feed/api/user/default?alt=json&kind=photo&access_token=${accessToken}&max-results=1`)
           expect(requestOptions.headers).to.deep.equal({ 'GData-Version': '2' })
 
           done()
@@ -99,14 +99,14 @@ describe('Picasa', () => {
       }
 
       stub = sinon.stub(picasa, 'request')
-      stub.callsArgWithAsync(2, null, body)
+      stub.callsArgWithAsync(2, null, JSON.stringify(body))
     })
 
     afterEach(() => stub.restore())
 
     it('returns access token response', (done) => {
       picasa.getAccessToken('4/DxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8', (error, accessToken) => {
-        expect(stub).to.have.been.calledWith('post', 'https://www.googleapis.com/oauth2/v3/token?grant_type=authorization_code&code=4%2FDxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8&redirect_uri=http%3A%2F%2Flocalhost&client_id=apps.google.com&client_secret=client_secretABC')
+        expect(stub).to.have.been.calledWith('post', { url : 'https://www.googleapis.com/oauth2/v3/token?grant_type=authorization_code&code=4%2FDxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8&redirect_uri=http%3A%2F%2Flocalhost&client_id=apps.google.com&client_secret=client_secretABC' })
 
         expect(error).to.be.equal(null)
         expect(accessToken).to.be.equals('ya29.KwLDeXsw1jNAavZ8jEMFgikhDg_CnUX1oMr5RQUyeqTBf229YV4HzhhXvRgBBvFGqTqxdw')
