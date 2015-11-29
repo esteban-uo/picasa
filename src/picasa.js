@@ -1,13 +1,15 @@
 'use strict'
 
 const querystring = require('querystring')
-const request = require('request')
 const parseString = require('xml2js').parseString
+
+const request = require('./picasaRequest')
 
 function Picasa(clientId, redirectURI, clientSecret) {
   this.clientId = clientId
   this.redirectURI = redirectURI
   this.clientSecret = clientSecret
+
   this.request = request
 }
 
@@ -16,43 +18,27 @@ Picasa.prototype.getPhotos = getPhotos
 Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
 
-function getPhotos (accessToken, callback) {
+function getPhotos (accessToken, options, callback) {
   const host = 'https://picasaweb.google.com'
   const path = '/data/feed/api/user/default'
 
   const accessTokenParams = {
-    'max-results' : 1,
-    alt           : 'json'
+    'max-results' : options.maxResults ? options.maxResults : 0,
   }
 
+  accessTokenParams.alt = 'json'    // Retrive as json
   accessTokenParams.kind = 'photo'
-
   accessTokenParams.access_token = accessToken
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
-  const options = {
+  const requestOptions = {
     url : `${host}${path}?${accessTokenQuery}`,
     headers: {
       'GData-Version': '2'
     }
   }
 
-  this.request.get(options, (error, response, body) => {
-    if(error) callback(error)
-
-    if (response.statusCode == 403) {
-      return callback(new Error(body))
-    }
-
-    if (response.statusCode != 200) {
-      const unknownError = new Error('UNKNOWN_ERROR')
-
-      unknownError.statusCode = statusCode
-      unknownError.body = body
-
-      return callback(unknownError)
-    }
-
+  this.request('get', requestOptions, (error, body) => {
     try {
       const parsedBody = JSON.parse(body)
 
@@ -96,10 +82,8 @@ function getAccessToken (code, callback) {
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
 
-  this.request.post(`${host}${path}?${accessTokenQuery}`, (error, response, body) => {
-    // response.statusCode == 200   // TODO handle error
-
-    callback(null, body.access_token)
+  this.request('post', `${host}${path}?${accessTokenQuery}`, (error, response) => {
+    callback(error, response.access_token)
   })
 }
 
