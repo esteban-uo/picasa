@@ -4,7 +4,7 @@
   "description": "Picasa web albums client for node",
   "main": "src/picasa.js",
   "scripts": {
-    "test": "mocha src/ --harmony -t 6000",
+    "test": "mocha src/ --harmony",
     "test-debug": "mocha src/ --harmony -t 6000  --debug-brk",
     "test-watch": "mocha src/ --harmony --watch"
   },

@@ -21,8 +21,6 @@ describe('Picasa', () => {
     picasa = new Picasa(clientId, redirectURL, clientSecret)
   })
 
-  afterEach(() => stub.restore())
-
   describe('getPhotos', () => {
     describe('on status code different than 200', () => {
       describe('on error 403', () => {
@@ -33,6 +31,8 @@ describe('Picasa', () => {
           stub = sinon.stub(picasa.request, 'get')
           stub.callsArgWithAsync(1, null, response, body)
         })
+
+        afterEach(() => stub.restore())
 
         it('should return an error from the body', () => {
           picasa.getPhotos('notValid', (error, photos) => {
@@ -84,6 +84,8 @@ describe('Picasa', () => {
         stub.callsArgWithAsync(1, null, response, JSON.stringify(body))
       })
 
+      afterEach(() => stub.restore())
+
       it('returns an array of photos', (done) => {
         const accessToken = 'ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw'
 
@@ -92,6 +94,11 @@ describe('Picasa', () => {
 
           expect(photos[0].src).to.contain('IMG_0327.JPG')
           expect(photos[0].type).to.be.equals('image/jpeg')
+
+          const requestOptions = stub.firstCall.args[0]
+
+          expect(requestOptions.url).to.be.equals(`https://picasaweb.google.com/data/feed/api/user/default?max-results=1&alt=json&kind=photo&access_token=${accessToken}`)
+          expect(requestOptions.headers).to.deep.equal({ 'GData-Version': '2' })
 
           done()
         })
@@ -118,11 +125,14 @@ describe('Picasa', () => {
       stub.callsArgWithAsync(1, null, {}, body)
     })
 
+    afterEach(() => stub.restore())
+
     it('returns access token response', (done) => {
       picasa.getAccessToken('4/DxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8', (error, accessToken) => {
         expect(error).to.be.equal(null)
-        expect(stub).to.have.been.calledWith('https://www.googleapis.com/oauth2/v3/token?grant_type=authorization_code&code=4%2FDxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8&redirect_uri=http%3A%2F%2Flocalhost&client_id=apps.google.com&client_secret=client_secretABC')
         expect(accessToken).to.be.equals('ya29.KwLDeXsw1jNAavZ8jEMFgikhDg_CnUX1oMr5RQUyeqTBf229YV4HzhhXvRgBBvFGqTqxdw')
+
+        expect(stub).to.have.been.calledWith('https://www.googleapis.com/oauth2/v3/token?grant_type=authorization_code&code=4%2FDxoCTw8Rf3tQAAW94h6lK7ioEjnu6K8kEqVZ0d-cRA8&redirect_uri=http%3A%2F%2Flocalhost&client_id=apps.google.com&client_secret=client_secretABC')
 
         done()
       })
