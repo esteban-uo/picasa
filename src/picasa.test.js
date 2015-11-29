@@ -58,7 +58,7 @@ describe('Picasa', () => {
         const response = { statusCode : 200 }
 
         stub = sinon.stub(picasa, 'request')
-        stub.callsArgWithAsync(2, null, JSON.stringify(body))
+        stub.callsArgWithAsync(2, null, body)
       })
 
       afterEach(() => stub.restore())
@@ -99,7 +99,7 @@ describe('Picasa', () => {
       }
 
       stub = sinon.stub(picasa, 'request')
-      stub.callsArgWithAsync(2, null, JSON.stringify(body))
+      stub.callsArgWithAsync(2, null, body)
     })
 
     afterEach(() => stub.restore())

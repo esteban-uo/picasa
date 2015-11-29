@@ -16,7 +16,11 @@ function picasaRequest (method, requestOptions, callback) {
       return callback(unknownError)
     }
 
-    callback(null, body)
+    try {
+      callback(null, JSON.parse(body))
+    } catch (error) {
+      callback(error)
+    }
   })
 }
 

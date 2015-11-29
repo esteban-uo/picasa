@@ -41,14 +41,9 @@ function getPhotos (accessToken, options, callback) {
   this.request('get', requestOptions, (error, body) => {
     if (error) return callback(error)
 
-    try {
-      const parsedBody = JSON.parse(body)
-      const photos = parsedBody.feed.entry.map(entry => { return entry.content })
+    const photos = body.feed.entry.map(entry => { return entry.content })
 
-      callback(null, photos)
-    } catch (error) {
-      callback(error)
-    }
+    callback(null, photos)
   })
 }
 
@@ -89,13 +84,7 @@ function getAccessToken (code, callback) {
   this.request('post', options, (error, body) => {
     if (error) return callback(error)
 
-    try {
-      const parsedBody = JSON.parse(body)
-
-      callback(null, parsedBody.access_token)
-    } catch (error) {
-      callback(error)
-    }
+    callback(null, body.access_token)
   })
 }
 
