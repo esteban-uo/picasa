@@ -1,7 +1,6 @@
 'use strict'
 
 const querystring = require('querystring')
-const parseString = require('xml2js').parseString
 
 const request = require('./picasaRequest')
 

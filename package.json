@@ -35,7 +35,6 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "request": "^2.65.0",
-    "xml2js": "^0.4.15"
+    "request": "^2.65.0"
   }
 }
