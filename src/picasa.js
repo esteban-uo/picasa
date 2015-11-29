@@ -23,12 +23,12 @@ function getPhotos (accessToken, options, callback) {
   const path = '/data/feed/api/user/default'
 
   const accessTokenParams = {
-    'max-results' : options.maxResults ? options.maxResults : 0,
+    alt          : 'json',        // Fetch as JSON
+    kind         : 'photo',
+    access_token : accessToken
   }
 
-  accessTokenParams.alt = 'json'    // Retrive as json
-  accessTokenParams.kind = 'photo'
-  accessTokenParams.access_token = accessToken
+  if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
   const requestOptions = {
@@ -39,9 +39,10 @@ function getPhotos (accessToken, options, callback) {
   }
 
   this.request('get', requestOptions, (error, body) => {
+    if (error) return callback(error)
+
     try {
       const parsedBody = JSON.parse(body)
-
       const photos = parsedBody.feed.entry.map(entry => { return entry.content })
 
       callback(null, photos)
@@ -81,9 +82,20 @@ function getAccessToken (code, callback) {
   }
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
+  const options = {
+    url : `${host}${path}?${accessTokenQuery}`
+  }
 
-  this.request('post', `${host}${path}?${accessTokenQuery}`, (error, response) => {
-    callback(error, response.access_token)
+  this.request('post', options, (error, body) => {
+    if (error) return callback(error)
+
+    try {
+      const parsedBody = JSON.parse(body)
+
+      callback(null, parsedBody.access_token)
+    } catch (error) {
+      callback(error)
+    }
   })
 }
 
