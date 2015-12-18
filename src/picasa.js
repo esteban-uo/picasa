@@ -2,14 +2,15 @@
 
 const querystring = require('querystring')
 
-const request = require('./picasaRequest')
+const request = require('./request')
 
-function Picasa(clientId, redirectURI, clientSecret) {
+function Picasa (clientId, redirectURI, clientSecret) {
   this.clientId = clientId
   this.redirectURI = redirectURI
   this.clientSecret = clientSecret
 
-  this.request = request
+  this.executeRequest = request.executeRequest
+  this.picasaRequest = request.picasaRequest
 }
 
 Picasa.prototype.getPhotos = getPhotos
@@ -18,26 +19,7 @@ Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
 
 function getPhotos (accessToken, options, callback) {
-  const host = 'https://picasaweb.google.com'
-  const path = '/data/feed/api/user/default'
-
-  const accessTokenParams = {
-    alt          : 'json',        // Fetch as JSON
-    kind         : 'photo',
-    access_token : accessToken
-  }
-
-  if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
-
-  const accessTokenQuery = querystring.stringify(accessTokenParams)
-  const requestOptions = {
-    url : `${host}${path}?${accessTokenQuery}`,
-    headers: {
-      'GData-Version': '2'
-    }
-  }
-
-  this.request('get', requestOptions, (error, body) => {
+  this.picasaRequest(accessToken, 'get', 'photo', options, (error, body) => {
     if (error) return callback(error)
 
     const photos = body.feed.entry.map(entry => { return entry.content })
@@ -80,7 +62,7 @@ function getAccessToken (code, callback) {
     url : `${host}${path}?${accessTokenQuery}`
   }
 
-  this.request('post', options, (error, body) => {
+  this.executeRequest('post', options, (error, body) => {
     if (error) return callback(error)
 
     callback(null, body.access_token)
