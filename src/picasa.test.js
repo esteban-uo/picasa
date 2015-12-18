@@ -9,7 +9,7 @@ chai.use(sinonChai)
 
 const Picasa = require('./picasa')
 
-describe.only('Picasa', () => {
+describe('Picasa', () => {
   let picasa, stub
 
   const clientId = 'apps.google.com'
@@ -68,11 +68,6 @@ describe.only('Picasa', () => {
 
           expect(photos[0].src).to.contain('IMG_0327.JPG')
           expect(photos[0].type).to.be.equals('image/jpeg')
-
-          // const requestOptions = stub.firstCall.args[1]
-          //
-          // expect(requestOptions.url).to.equal(`https://picasaweb.google.com/data/feed/api/user/default?alt=json&kind=photo&access_token=${accessToken}&max-results=1`)
-          // expect(requestOptions.headers).to.deep.equal({ 'GData-Version': '2' })
 
           done()
         })

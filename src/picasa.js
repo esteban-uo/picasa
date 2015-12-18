@@ -4,6 +4,11 @@ const querystring = require('querystring')
 
 const request = require('./request')
 
+const userAuthenticationEndpoint = 'https://accounts.google.com/o/oauth2/auth'
+const googleScope = 'https://picasaweb.google.com/data/'
+const googleAPIhost = 'https://www.googleapis.com'
+const googleAPIPath = '/oauth2/v3/token'
+
 function Picasa (clientId, redirectURI, clientSecret) {
   this.clientId = clientId
   this.redirectURI = redirectURI
@@ -29,11 +34,9 @@ function getPhotos (accessToken, options, callback) {
 }
 
 function getAuthURL () {
-  const userAuthenticationEndpoint = 'https://accounts.google.com/o/oauth2/auth'
-
   const authenticationParams = {
     access_type   : 'offline',
-    scope         : 'https://picasaweb.google.com/data/',
+    scope         : googleScope,
     response_type : 'code',
     client_id     : this.clientId,
     redirect_uri  : this.redirectURI
@@ -45,9 +48,6 @@ function getAuthURL () {
 }
 
 function getAccessToken (code, callback) {
-  const host = 'https://www.googleapis.com'
-  const path = '/oauth2/v3/token'
-
   const accessTokenParams = {
     grant_type    : 'authorization_code',
     code          : code,
@@ -59,7 +59,7 @@ function getAccessToken (code, callback) {
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
   const options = {
-    url : `${host}${path}?${accessTokenQuery}`
+    url : `${googleAPIhost}${googleAPIPath}?${accessTokenQuery}`
   }
 
   this.executeRequest('post', options, (error, body) => {
