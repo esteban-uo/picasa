@@ -4,7 +4,7 @@ const Picasa = require('../.')
 const config = require('./config')
 
 // Second step
-const code = '4/jYpY6FrpGm3yCBIuaA1tz1rQaY1vi-7vqQitxB1kx3U'
+const code = '4/D7lZJ3L24ugIbgga_82j3JUyKdMVpXppkH3-XeMAE90'
 
 const picasa = new Picasa(config)
 
