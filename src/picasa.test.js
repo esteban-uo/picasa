@@ -12,12 +12,14 @@ const Picasa = require('./picasa')
 describe('Picasa', () => {
   let picasa, stub
 
-  const clientId = 'apps.google.com'
-  const redirectURL = 'http://localhost'
-  const clientSecret = 'client_secretABC'
+  const config = {
+    clientId     : 'apps.google.com',
+    redirectURI  : 'http://localhost',
+    clientSecret : 'client_secretABC'
+  }
 
   beforeEach(() => {
-    picasa = new Picasa(clientId, redirectURL, clientSecret)
+    picasa = new Picasa(config)
   })
 
   describe('getPhotos', () => {

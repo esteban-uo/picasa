@@ -9,10 +9,10 @@ const googleScope = 'https://picasaweb.google.com/data/'
 const googleAPIhost = 'https://www.googleapis.com'
 const googleAPIPath = '/oauth2/v3/token'
 
-function Picasa (clientId, redirectURI, clientSecret) {
-  this.clientId = clientId
-  this.redirectURI = redirectURI
-  this.clientSecret = clientSecret
+function Picasa (config) {
+  this.clientId = config.clientId
+  this.redirectURI = config.redirectURI
+  this.clientSecret = config.clientSecret
 
   this.executeRequest = request.executeRequest
   this.picasaRequest = request.picasaRequest

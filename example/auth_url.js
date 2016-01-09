@@ -3,11 +3,7 @@
 const Picasa = require('../.')
 const config = require('./config')
 
-const clientId = config.clientId
-const redirectURI = config.redirectURI
-const clientSecret = config.clientSecret
-
 // First stept
-const picasa = new Picasa(clientId, redirectURI, clientSecret)
+const picasa = new Picasa(config)
 
 console.log(picasa.getAuthURL())

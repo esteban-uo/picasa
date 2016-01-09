@@ -19,13 +19,13 @@ Usage
 const Picasa = require('picasa')
 
 // Configure them here https://console.developers.google.com/home/dashboard
-const options = {
+const config = {
   clientId     : 'yourClientId',
   redirectURI  : 'redirectURI',
   clientSecret : 'yourClientSecret'
 }
 
-const picasa = new Picasa(options)
+const picasa = new Picasa(config)
 ```
 
 API
