@@ -53,8 +53,7 @@ function getAccessToken (code, callback) {
     code          : code,
     redirect_uri  : this.redirectURI,
     client_id     : this.clientId,
-    client_secret : this.clientSecret,
-    grant_type    : 'authorization_code'
+    client_secret : this.clientSecret
   }
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
