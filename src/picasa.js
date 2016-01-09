@@ -27,10 +27,47 @@ function getPhotos (accessToken, options, callback) {
   this.picasaRequest(accessToken, 'get', 'photo', options, (error, body) => {
     if (error) return callback(error)
 
-    const photos = body.feed.entry.map(entry => { return entry.content })
+    const photoSchema = {
+      'gphoto$id'                : 'id',
+      'gphoto$albumid'           : 'album_id',
+      'gphoto$access'            : 'access',
+      'gphoto$width'             : 'width',
+      'gphoto$height'            : 'height',
+      'gphoto$size'              : 'size' ,
+      'gphoto$checksum'          : 'checksum',
+      'gphoto$timestamp'         : 'timestamp',
+      'gphoto$imageVersion'      : 'image_version',
+      'gphoto$commentingEnabled' : 'commenting_enabled',
+      'gphoto$commentCount'      : 'comment_count',
+      'content'                  : 'content',
+      'title'                    : 'title',
+      'summary'                  : 'summary'
+    }
+
+    const photos = body.feed.entry.map(entry => {
+      let photo = {}
+
+      Object.keys(photoSchema).forEach(schemaKey => {
+        const key = photoSchema[schemaKey]
+
+        if (key) photo[key] = checkParam(entry[schemaKey])
+      })
+
+      return photo
+    })
 
     callback(null, photos)
   })
+}
+
+function checkParam (param) {
+  if (isValidType(param)) return param
+  else if (isValidType(param['$t'])) return param['$t']
+  else return param
+}
+
+function isValidType (value) {
+  return typeof value === 'string' || typeof value === 'number'
 }
 
 function getAuthURL () {
