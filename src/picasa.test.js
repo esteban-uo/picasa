@@ -68,8 +68,10 @@ describe('Picasa', () => {
         picasa.getPhotos(accessToken, { maxResults : 1 }, (error, photos) => {
           expect(error).to.be.equals(null)
 
-          expect(photos[0].src).to.contain('IMG_0327.JPG')
-          expect(photos[0].type).to.be.equals('image/jpeg')
+
+          expect(photos[0].title).to.be.equals('IMG_0327.JPG')
+          expect(photos[0].content.src).to.contain('IMG_0327.JPG')
+          expect(photos[0].content.type).to.be.equals('image/jpeg')
 
           done()
         })
