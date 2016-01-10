@@ -2,8 +2,7 @@
 
 const Picasa = require('../.')
 
-// Third step
-const accessToken = 'ya29.ZAIXMKYXkuw_g_1BBSWfesb5YDi5JVA343G_0oH1qtjC5A6FUdsNBR6l8VOeGyUwH9QmbIc'
+const accessToken = 'ya29.ZQK3z803DuaNHbAJs6_6ujY9qNbS4yfbBEjnUpQjuvOftW45Kw7fh6SPSsK5KXH3W7Y8'
 
 const picasa = new Picasa()
 
