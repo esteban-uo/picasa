@@ -15,6 +15,8 @@ $ npm install --save ...
 Usage
 -----
 
+(Check out the examples dir too.)
+
 ```js
 const Picasa = require('picasa')
 
@@ -24,7 +26,8 @@ const picasa = new Picasa()
 **NOTE**: Every Picasa API request requires an access token.
 
 ### Photos
-Get all photos.
+
+#### Get
 
 ```js
 
@@ -32,15 +35,31 @@ const options = {
   'max-results' : 10 // by default get all
 }
 
-// Get only 10
 picasa.getPhotos(accessToken, options, (error, photos) => {
   console.log(error, photos)
 })
 ```
 
+#### Post
+
+Where binary is the binary's file and the albumId the album id to be stored.
+
+```js
+const photoData = {
+  title       : 'A title',
+  summary     : 'Summary or description',
+  contentType : 'image/jpeg',             // image/bmp, image/gif, image/png
+  binary      : binary
+}
+
+picasa.postPhoto(accessToken, albumId, photoData, (error, photo) => {
+  console.log(error, photo)
+})
+```
+
 ### Auth
 
-To get an access token please follow this flow:
+To get an access token follow the next flow:
 
 1.Get the Auth URL and redirect the user to it.
 
@@ -72,6 +91,7 @@ picasa.getAccessToken(config, code, (error, accessToken) => {
   console.log(error, accessToken)
 })
 ```
+
 License
 -------
 
