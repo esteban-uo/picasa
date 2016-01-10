@@ -29,10 +29,10 @@ Get all photos.
 ```js
 
 const options = {     
-  'max-results' : 10 // by default is all photos
+  'max-results' : 10 // by default get all
 }
 
-// Get 10 photos
+// Get only 10
 picasa.getPhotos(accessToken, options, (error, photos) => {
   console.log(error, photos)
 })
@@ -45,7 +45,7 @@ To get an access token please follow this flow:
 1.Get the Auth URL and redirect the user to it.
 
 ```js
-// Get them here https://console.developers.google.com/home/dashboard
+// Get config here https://console.developers.google.com/home/dashboard
 const config = {
   clientId     : 'yourClientId',
   redirectURI  : 'redirectURI'
@@ -61,7 +61,7 @@ const authURL = picasa.getAuthURL(config)
 4.Use the code given as GET param in order to get an access token:
 
 ```js
-// Get them here https://console.developers.google.com/home/dashboard
+// Get config here https://console.developers.google.com/home/dashboard
 const config = {
   clientId     : 'yourClientId',
   redirectURI  : 'redirectURI'
@@ -72,10 +72,6 @@ picasa.getAccessToken(config, code, (error, accessToken) => {
   console.log(error, accessToken)
 })
 ```
-
-
-### getPhotos
-
 License
 -------
 
