@@ -23,36 +23,8 @@ describe('request', () => {
     })
   })
 
-  describe('picasaRequest', () => {
-    const picasaRequest = request.picasaRequest
-
-    beforeEach((done) => {
-      stubExecuteRequest = sinon.stub()
-
-      request.__set__('executeRequest', stubExecuteRequest)
-      stubExecuteRequest.callsArgWithAsync(2, null, 'aaaaa')
-
-      picasaRequest('aaaaa', 'post', 'photos',{}, done)
-    })
-
-    it('should request verb given', () => {
-      const firstArgument = stubExecuteRequest.args[0][0]
-
-      expect(firstArgument).to.be.eql('post')
-    })
-
-    it('should prepare header and url with access token given', () => {
-      const secondArgument = stubExecuteRequest.args[0][1]
-
-      expect(secondArgument).to.be.eql({
-        headers : { 'GData-Version': "2" },
-        url     : "https://picasaweb.google.com/data/feed/api/user/default?alt=json&kind=photos&access_token=aaaaa"
-      })
-    })
-  })
-
   describe('executeRequest', () => {
-    const executeRequest = request.executeRequest
+    const executeRequest = request
 
     describe('on status code different than 200', () => {
       describe('on error 403', () => {

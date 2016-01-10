@@ -2,20 +2,15 @@
 
 const querystring = require('querystring')
 
-const request = require('./request')
+const executeRequest = require('./request')
 
-const userAuthenticationEndpoint = 'https://accounts.google.com/o/oauth2/auth'
-const googleScope = 'https://picasaweb.google.com/data/'
-const googleAPIhost = 'https://www.googleapis.com'
-const googleAPIPath = '/oauth2/v3/token'
+const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
+const GOOGLE_SCOPE = 'https://picasaweb.google.com/data/'
+const GOOGLE_API_HOST = 'https://www.googleapis.com'
+const GOOGLE_API_PATH = '/oauth2/v3/token'
 
-function Picasa (config) {
-  this.clientId = config.clientId
-  this.redirectURI = config.redirectURI
-  this.clientSecret = config.clientSecret
-
-  this.executeRequest = request.executeRequest
-  this.picasaRequest = request.picasaRequest
+function Picasa () {
+  this.executeRequest = executeRequest
 }
 
 Picasa.prototype.getPhotos = getPhotos
@@ -24,7 +19,9 @@ Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
 
 function getPhotos (accessToken, options, callback) {
-  this.picasaRequest(accessToken, 'get', 'photo', options, (error, body) => {
+  const requestOptions = buildPicasaRequestOptions(accessToken, 'photo', options)
+
+  this.executeRequest('get', requestOptions, (error, body) => {
     if (error) return callback(error)
 
     const photoSchema = {
@@ -60,43 +57,32 @@ function getPhotos (accessToken, options, callback) {
   })
 }
 
-function checkParam (param) {
-  if (!param) return ''
-  if (isValidType(param)) return param
-  else if (isValidType(param['$t'])) return param['$t']
-  else return param
-}
-
-function isValidType (value) {
-  return typeof value === 'string' || typeof value === 'number'
-}
-
-function getAuthURL () {
+function getAuthURL (config) {
   const authenticationParams = {
     access_type   : 'offline',
-    scope         : googleScope,
+    scope         : GOOGLE_SCOPE,
     response_type : 'code',
-    client_id     : this.clientId,
-    redirect_uri  : this.redirectURI
+    client_id     : config.clientId,
+    redirect_uri  : config.redirectURI
   }
 
   const authenticationQuery = querystring.stringify(authenticationParams)
 
-  return `${userAuthenticationEndpoint}?${authenticationQuery}`
+  return `${GOOGLE_AUTH_ENDPOINT}?${authenticationQuery}`
 }
 
-function getAccessToken (code, callback) {
+function getAccessToken (config, code, callback) {
   const accessTokenParams = {
     grant_type    : 'authorization_code',
     code          : code,
-    redirect_uri  : this.redirectURI,
-    client_id     : this.clientId,
-    client_secret : this.clientSecret
+    redirect_uri  : config.redirectURI,
+    client_id     : config.clientId,
+    client_secret : config.clientSecret
   }
 
   const accessTokenQuery = querystring.stringify(accessTokenParams)
   const options = {
-    url : `${googleAPIhost}${googleAPIPath}?${accessTokenQuery}`
+    url : `${GOOGLE_API_HOST}${GOOGLE_API_PATH}?${accessTokenQuery}`
   }
 
   this.executeRequest('post', options, (error, body) => {
@@ -104,6 +90,42 @@ function getAccessToken (code, callback) {
 
     callback(null, body.access_token)
   })
+}
+
+function buildPicasaRequestOptions (accessToken, kind, options) {
+  const host = 'https://picasaweb.google.com'
+  const path = '/data/feed/api/user/default'
+  const fetchKind = 'json'
+
+  const accessTokenParams = {
+    alt          : fetchKind,
+    kind         : kind,
+    access_token : accessToken
+  }
+
+  options = options || {}
+
+  if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
+
+  const accessTokenQuery = querystring.stringify(accessTokenParams)
+
+  return {
+    url : `${host}${path}?${accessTokenQuery}`,
+    headers: {
+      'GData-Version': '2'
+    }
+  }
+}
+
+function checkParam (param) {
+  if (param === undefined) return ''
+  else if (isValidType(param)) return param
+  else if (isValidType(param['$t'])) return param['$t']
+  else return param
+}
+
+function isValidType (value) {
+  return typeof value === 'string' || typeof value === 'number'
 }
 
 module.exports = Picasa

@@ -4,6 +4,6 @@ const Picasa = require('../.')
 const config = require('./config')
 
 // First stept
-const picasa = new Picasa(config)
+const picasa = new Picasa()
 
-console.log(picasa.getAuthURL())
+console.log(picasa.getAuthURL(config))

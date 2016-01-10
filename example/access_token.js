@@ -8,6 +8,6 @@ const code = '4/D7lZJ3L24ugIbgga_82j3JUyKdMVpXppkH3-XeMAE90'
 
 const picasa = new Picasa(config)
 
-picasa.getAccessToken(code, (error, accessToken) => {
+picasa.getAccessToken(config, code, (error, accessToken) => {
   console.log(error, accessToken)
 })

@@ -25,7 +25,7 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-const picasa = new Picasa(config)
+const picasa = new Picasa()
 ```
 
 API
