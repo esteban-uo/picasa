@@ -12,14 +12,47 @@ const PICASA_HOST = 'https://picasaweb.google.com'
 const PICASA_SCOPE = '/data'
 const PICASA_API_PATH = '/feed/api/user/default'
 
+const FETCH_AS_JSON = 'json'
+
 function Picasa () {
   this.executeRequest = executeRequest
 }
 
 Picasa.prototype.getPhotos = getPhotos
+Picasa.prototype.postPhoto = postPhoto
 
+// Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
+
+function postPhoto (accessToken, albumId, photoData, callback) {
+  const accessTokenQuery = querystring.stringify({
+    alt          : FETCH_AS_JSON,
+    access_token : accessToken
+  })
+
+  const photoInfoXML = `<entry xmlns="http://www.w3.org/2005/Atom">
+                          <title>${photoData.title}</title>
+                          <summary>${photoData.summary}</summary>
+                          <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/photos/2007#photo"/>
+                        </entry>`
+
+  const requestOptions = {
+    url       : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}/albumid/${albumId}?${accessTokenQuery}`,
+    multipart : [
+      {'Content-Type' : 'application/atom+xml', body : photoInfoXML},
+      {'Content-Type' : photoData.contentType, body : photoData.binary}
+    ]
+  }
+
+  this.executeRequest('post', requestOptions, (error, body) => {
+    if (error) return callback(error)
+
+    const photo = getPhotoByEntry(body.entry)
+
+    callback(error, photo)
+  })
+}
 
 function getPhotos (accessToken, options, callback) {
   const requestOptions = buildPicasaRequestOptions(accessToken, 'photo', options)
@@ -27,37 +60,39 @@ function getPhotos (accessToken, options, callback) {
   this.executeRequest('get', requestOptions, (error, body) => {
     if (error) return callback(error)
 
-    const photoSchema = {
-      'gphoto$id'                : 'id',
-      'gphoto$albumid'           : 'album_id',
-      'gphoto$access'            : 'access',
-      'gphoto$width'             : 'width',
-      'gphoto$height'            : 'height',
-      'gphoto$size'              : 'size' ,
-      'gphoto$checksum'          : 'checksum',
-      'gphoto$timestamp'         : 'timestamp',
-      'gphoto$imageVersion'      : 'image_version',
-      'gphoto$commentingEnabled' : 'commenting_enabled',
-      'gphoto$commentCount'      : 'comment_count',
-      'content'                  : 'content',
-      'title'                    : 'title',
-      'summary'                  : 'summary'
-    }
-
-    const photos = body.feed.entry.map(entry => {
-      let photo = {}
-
-      Object.keys(photoSchema).forEach(schemaKey => {
-        const key = photoSchema[schemaKey]
-
-        if (key) photo[key] = checkParam(entry[schemaKey])
-      })
-
-      return photo
-    })
+    const photos = body.feed.entry.map(getPhotoByEntry)
 
     callback(null, photos)
   })
+}
+
+const photoSchema = {
+  'gphoto$id'                : 'id',
+  'gphoto$albumid'           : 'album_id',
+  'gphoto$access'            : 'access',
+  'gphoto$width'             : 'width',
+  'gphoto$height'            : 'height',
+  'gphoto$size'              : 'size' ,
+  'gphoto$checksum'          : 'checksum',
+  'gphoto$timestamp'         : 'timestamp',
+  'gphoto$imageVersion'      : 'image_version',
+  'gphoto$commentingEnabled' : 'commenting_enabled',
+  'gphoto$commentCount'      : 'comment_count',
+  'content'                  : 'content',
+  'title'                    : 'title',
+  'summary'                  : 'summary'
+}
+
+function getPhotoByEntry (entry) {
+  let photo = {}
+
+  Object.keys(photoSchema).forEach(schemaKey => {
+    const key = photoSchema[schemaKey]
+
+    if (key) photo[key] = checkParam(entry[schemaKey])
+  })
+
+  return photo
 }
 
 function getAuthURL (config) {
@@ -96,10 +131,8 @@ function getAccessToken (config, code, callback) {
 }
 
 function buildPicasaRequestOptions (accessToken, kind, options) {
-  const fetchKind = 'json'
-
   const accessTokenParams = {
-    alt          : fetchKind,
+    alt          : FETCH_AS_JSON,
     kind         : kind,
     access_token : accessToken
   }
