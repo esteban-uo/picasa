@@ -101,7 +101,7 @@ describe('Picasa', () => {
   describe('getAuthURL', () => {
     it('returns valid URI', () => {
       expect(picasa.getAuthURL(config))
-        .to.be.equals('https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&response_type=code&client_id=apps.google.com&redirect_uri=http%3A%2F%2Flocalhost')
+        .to.be.equals('https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fpicasaweb.google.com%2Fdata&response_type=code&client_id=apps.google.com&redirect_uri=http%3A%2F%2Flocalhost')
     })
   })
 

@@ -5,9 +5,12 @@ const querystring = require('querystring')
 const executeRequest = require('./request')
 
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
-const GOOGLE_SCOPE = 'https://picasaweb.google.com/data/'
 const GOOGLE_API_HOST = 'https://www.googleapis.com'
 const GOOGLE_API_PATH = '/oauth2/v3/token'
+
+const PICASA_HOST = 'https://picasaweb.google.com'
+const PICASA_SCOPE = '/data'
+const PICASA_API_PATH = '/feed/api/user/default'
 
 function Picasa () {
   this.executeRequest = executeRequest
@@ -60,7 +63,7 @@ function getPhotos (accessToken, options, callback) {
 function getAuthURL (config) {
   const authenticationParams = {
     access_type   : 'offline',
-    scope         : GOOGLE_SCOPE,
+    scope         : `${PICASA_HOST}${PICASA_SCOPE}`,
     response_type : 'code',
     client_id     : config.clientId,
     redirect_uri  : config.redirectURI
@@ -93,8 +96,6 @@ function getAccessToken (config, code, callback) {
 }
 
 function buildPicasaRequestOptions (accessToken, kind, options) {
-  const host = 'https://picasaweb.google.com'
-  const path = '/data/feed/api/user/default'
   const fetchKind = 'json'
 
   const accessTokenParams = {
@@ -110,7 +111,7 @@ function buildPicasaRequestOptions (accessToken, kind, options) {
   const accessTokenQuery = querystring.stringify(accessTokenParams)
 
   return {
-    url : `${host}${path}?${accessTokenQuery}`,
+    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}?${accessTokenQuery}`,
     headers: {
       'GData-Version': '2'
     }
