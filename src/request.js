@@ -8,7 +8,7 @@ function executeRequest (method, requestOptions, callback) {
     if (error) return callback(error)
 
     if (response.statusCode == 403) return callback(new Error(body))
-    if (response.statusCode != 200) {
+    if (response.statusCode < 200 || response.statusCode > 226 ) {
       const unknownError = new Error('UNKNOWN_ERROR')
 
       unknownError.statusCode = response.statusCode
