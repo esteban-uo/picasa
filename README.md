@@ -9,7 +9,7 @@ Install
 -------
 
 ```
-$ npm install --save ...
+$ npm install --save picasa
 ```
 
 Usage
