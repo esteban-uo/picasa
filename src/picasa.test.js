@@ -26,23 +26,8 @@ describe('Picasa', () => {
         "feed":{
           "entry":[
             {
-              "id":{
-                "$t":"https://picasaweb.google.com/data/entry/user/11111/albumid/1111/photoid/11111"
-              },
-              "published":{
-                "$t":"2015-11-28T07:13:31.000Z"
-              },
-              "updated":{
-                "$t":"2015-11-28T07:22:35.478Z"
-              },
-              "app$edited":{
-                "$t":"2015-11-28T07:22:35.478Z"
-              },
               "title":{
                 "$t":"IMG_0327.JPG"
-              },
-              "summary":{
-                "$t":""
               },
               "content":{
                 "type":"image/jpeg",
@@ -93,6 +78,80 @@ describe('Picasa', () => {
         expect(secondArgument).to.be.eql({
           headers : { 'GData-Version': "2" },
           url     : "https://picasaweb.google.com/data/feed/api/user/default?alt=json&kind=photo&access_token=ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw&max-results=1"
+        })
+      })
+    })
+  })
+
+  describe('postPhoto', () => {
+    describe('on success', () => {
+      const fakeSuccessBody = {
+        "entry":{
+          "title":{
+            "$t":"IMG_0327.JPG"
+          },
+          "content":{
+            "type":"image/jpeg",
+            "src":"https://lh3.googleusercontent.com/-1111111/1111/11111/1111/IMG_0327.JPG"
+          }
+        }
+      }
+      let photo
+
+      beforeEach((done) => {
+        stub = sinon.stub(picasa, 'executeRequest')
+        stub.callsArgWithAsync(2, null, fakeSuccessBody)
+
+        const accessToken = 'ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw'
+        const albumId = 'anAlbumId'
+        const photoData = {
+          title       : 'An awesome title',
+          description : 'Yolo',
+          contentType : 'image/jpeg',
+          binary      : 'ImaginaryBinaryContent'
+        }
+
+        picasa.postPhoto(accessToken, albumId, photoData, (error, photoResponse) => {
+          expect(error).to.be.equals(null)
+          photo = photoResponse
+
+          done()
+        })
+      })
+
+      afterEach(() => stub.restore())
+
+      it('returns a photo object', () => {
+        expect(photo).to.be.an('object')
+      })
+
+      it('returns a photo with its props', () => {
+        expect(photo.title).to.be.equals('IMG_0327.JPG')
+        expect(photo.content.src).to.contain('IMG_0327.JPG')
+        expect(photo.content.type).to.be.equals('image/jpeg')
+      })
+
+      it('should make post request', () => {
+        const firstArgument = stub.args[0][0]
+
+        expect(firstArgument).to.be.eql('post')
+      })
+
+      it('should prepare a multipart request and the URL', () => {
+        const secondArgument = stub.args[0][1]
+
+        expect(secondArgument).to.be.eql({
+          "multipart": [
+            {
+              "Content-Type": "application/atom+xml",
+              "body": "<entry xmlns=\"http://www.w3.org/2005/Atom\">\n                          <title>An awesome title</title>\n                          <summary>undefined</summary>\n                          <category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/photos/2007#photo\"/>\n                        </entry>"
+            },
+            {
+              "Content-Type": "image/jpeg",
+              "body": "ImaginaryBinaryContent"
+            }
+          ],
+          url : "https://picasaweb.google.com/data/feed/api/user/default/albumid/anAlbumId?alt=json&access_token=ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw"
         })
       })
     })
