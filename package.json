@@ -2,9 +2,11 @@
   "name": "picasa",
   "version": "0.0.0",
   "description": "Picasa web albums client for node",
-  "main": "index.js",
+  "main": "src/picasa.js",
   "scripts": {
-    "test": "mocha ."
+    "test": "mocha src/ --harmony",
+    "test-debug": "mocha src/ --harmony -t 6000  --debug-brk",
+    "test-watch": "mocha src/ --harmony --watch"
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,15 @@
   "bugs": {
     "url": "https://github.com/esteban-uo/picasa/issues"
   },
-  "homepage": "https://github.com/esteban-uo/picasa#readme"
+  "homepage": "https://github.com/esteban-uo/picasa#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.3",
+    "rewire": "^2.5.0",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "request": "^2.65.0"
+  }
 }

@@ -1,0 +1,5 @@
+{
+  "clientId"     : "fromGoogle.apps.googleusercontent.com",
+  "clientSecret" : "fromGoogleclientSecret",
+  "redirectURI"  : "http://your-app-url.com"
+}
