@@ -7,7 +7,6 @@ function executeRequest (method, requestOptions, callback) {
   request[method](requestOptions, (error, response, body) => {
     if (error) return callback(error)
 
-    if (response.statusCode == 403) return callback(new Error(body))
     if (response.statusCode < 200 || response.statusCode > 226 ) {
       const unknownError = new Error('UNKNOWN_ERROR')
 
@@ -16,6 +15,8 @@ function executeRequest (method, requestOptions, callback) {
 
       return callback(unknownError)
     }
+
+    if (body.length < 1) return callback()
 
     try {
       callback(null, JSON.parse(body))
