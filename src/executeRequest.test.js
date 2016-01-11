@@ -8,16 +8,16 @@ const rewire = require('rewire')
 const expect = chai.expect
 chai.use(sinonChai)
 
-const request = rewire('./request')
+const executeRequest = rewire('./executeRequest')
 
-describe('request', () => {
+describe('executeRequest', () => {
   let getMock, postMock, stubExecuteRequest
 
   beforeEach(() => {
     getMock = sinon.mock()
     postMock = sinon.mock()
 
-    request.__set__('request', {
+    executeRequest.__set__('request', {
       post : postMock,
       get  : getMock,
     })
@@ -33,7 +33,7 @@ describe('request', () => {
       })
 
       it('should return an object', (done) => {
-        request('get', {}, (error, response) => {
+        executeRequest('get', {}, (error, response) => {
           expect(error).to.be.equals(null)
 
           expect(response).to.be.an('object')
@@ -53,7 +53,7 @@ describe('request', () => {
       })
 
       it('should return error and response undefined', (done) => {
-        request('get', {}, (error, response) => {
+        executeRequest('get', {}, (error, response) => {
           expect(error).to.be.equals(undefined)
 
           expect(response).to.be.eq(undefined)
@@ -74,7 +74,7 @@ describe('request', () => {
       })
 
       it('should return an error from the body', (done) => {
-        request('get', {}, (error, response) => {
+        executeRequest('get', {}, (error, response) => {
           expect(error.statusCode).to.be.equals(403)
           expect(error.body).to.be.equals('weird error')
           expect(response).to.be.equals(undefined)
@@ -93,7 +93,7 @@ describe('request', () => {
       })
 
       it('should return an error from the body', () => {
-        request('get', {}, (error, photos) => {
+        executeRequest('get', {}, (error, photos) => {
           expect(error.message).to.be.equals('UNKNOWN_ERROR')
           expect(error.body).to.be.equals('<html>Nasty error</html>')
           expect(error.statusCode).to.be.equals(500)
