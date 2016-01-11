@@ -15,7 +15,7 @@ $ npm install --save ...
 Usage
 -----
 
-(Check out the examples dir too.)
+(Check out the examples dir too, rename config.example.json > config.json and add your credentials)
 
 ```js
 const Picasa = require('picasa')
@@ -57,6 +57,14 @@ picasa.postPhoto(accessToken, albumId, photoData, (error, photo) => {
 })
 ```
 
+#### Delete
+
+```js
+picasa.deletePhoto(accessToken, albumId, photoId, (error) => {
+  console.log(error)
+})
+```
+
 ### Auth
 
 To get an access token follow the next flow:
@@ -64,7 +72,7 @@ To get an access token follow the next flow:
 1.Get the Auth URL and redirect the user to it.
 
 ```js
-// Get config here https://console.developers.google.com/home/dashboard
+// Get config here API Manager > Credentials https://console.developers.google.com/home/dashboard
 const config = {
   clientId     : 'yourClientId',
   redirectURI  : 'redirectURI'
@@ -80,7 +88,7 @@ const authURL = picasa.getAuthURL(config)
 4.Use the code given as GET param in order to get an access token:
 
 ```js
-// Get config here https://console.developers.google.com/home/dashboard
+// Get config here API Manager > Credentials https://console.developers.google.com/home/dashboard
 const config = {
   clientId     : 'yourClientId',
   redirectURI  : 'redirectURI'

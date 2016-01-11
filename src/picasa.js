@@ -2,7 +2,7 @@
 
 const querystring = require('querystring')
 
-const executeRequest = require('./request')
+const executeRequest = require('./executeRequest')
 
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
 const GOOGLE_API_HOST = 'https://www.googleapis.com'
@@ -11,6 +11,7 @@ const GOOGLE_API_PATH = '/oauth2/v3/token'
 const PICASA_HOST = 'https://picasaweb.google.com'
 const PICASA_SCOPE = '/data'
 const PICASA_API_PATH = '/feed/api/user/default'
+const PICASA_API_ENTRY_PATH = '/entry/api/user/default'
 
 const FETCH_AS_JSON = 'json'
 
@@ -20,27 +21,44 @@ function Picasa () {
 
 Picasa.prototype.getPhotos = getPhotos
 Picasa.prototype.postPhoto = postPhoto
+Picasa.prototype.deletePhoto = deletePhoto
 
 // Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
 
-function postPhoto (accessToken, albumId, photoData, callback) {
-  const accessTokenQuery = querystring.stringify({
+function deletePhoto (accessToken, albumId, photoId, callback) {
+  const requestQuery = querystring.stringify({
     alt          : FETCH_AS_JSON,
     access_token : accessToken
   })
 
-  const photoInfoXML = `<entry xmlns="http://www.w3.org/2005/Atom">
+  const requestOptions = {
+    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_ENTRY_PATH}/albumid/${albumId}/photoid/${photoId}?${requestQuery}`,
+    headers: {
+      'If-Match': '*'
+    }
+  }
+
+  this.executeRequest('del', requestOptions, callback)
+}
+
+function postPhoto (accessToken, albumId, photoData, callback) {
+  const requestQuery = querystring.stringify({
+    alt          : FETCH_AS_JSON,
+    access_token : accessToken
+  })
+
+  const photoInfoAtom = `<entry xmlns="http://www.w3.org/2005/Atom">
                           <title>${photoData.title}</title>
                           <summary>${photoData.summary}</summary>
                           <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/photos/2007#photo"/>
                         </entry>`
 
   const requestOptions = {
-    url       : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}/albumid/${albumId}?${accessTokenQuery}`,
+    url       : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}/albumid/${albumId}?${requestQuery}`,
     multipart : [
-      {'Content-Type' : 'application/atom+xml', body : photoInfoXML},
+      {'Content-Type' : 'application/atom+xml', body : photoInfoAtom},
       {'Content-Type' : photoData.contentType, body : photoData.binary}
     ]
   }
@@ -55,7 +73,24 @@ function postPhoto (accessToken, albumId, photoData, callback) {
 }
 
 function getPhotos (accessToken, options, callback) {
-  const requestOptions = buildPicasaRequestOptions(accessToken, 'photo', options)
+  const accessTokenParams = {
+    alt          : FETCH_AS_JSON,
+    kind         : 'photo',
+    access_token : accessToken
+  }
+
+  options = options || {}
+
+  if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
+
+  const requestQuery = querystring.stringify(accessTokenParams)
+
+  const requestOptions = {
+    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}?${requestQuery}`,
+    headers: {
+      'GData-Version': '2'
+    }
+  }
 
   this.executeRequest('get', requestOptions, (error, body) => {
     if (error) return callback(error)
@@ -118,9 +153,9 @@ function getAccessToken (config, code, callback) {
     client_secret : config.clientSecret
   }
 
-  const accessTokenQuery = querystring.stringify(accessTokenParams)
+  const requestQuery = querystring.stringify(accessTokenParams)
   const options = {
-    url : `${GOOGLE_API_HOST}${GOOGLE_API_PATH}?${accessTokenQuery}`
+    url : `${GOOGLE_API_HOST}${GOOGLE_API_PATH}?${requestQuery}`
   }
 
   this.executeRequest('post', options, (error, body) => {
@@ -128,27 +163,6 @@ function getAccessToken (config, code, callback) {
 
     callback(null, body.access_token)
   })
-}
-
-function buildPicasaRequestOptions (accessToken, kind, options) {
-  const accessTokenParams = {
-    alt          : FETCH_AS_JSON,
-    kind         : kind,
-    access_token : accessToken
-  }
-
-  options = options || {}
-
-  if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
-
-  const accessTokenQuery = querystring.stringify(accessTokenParams)
-
-  return {
-    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}?${accessTokenQuery}`,
-    headers: {
-      'GData-Version': '2'
-    }
-  }
 }
 
 function checkParam (param) {

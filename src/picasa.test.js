@@ -83,6 +83,46 @@ describe('Picasa', () => {
     })
   })
 
+  describe('deletePhoto', () => {
+    describe('on success', () => {
+      let photo
+
+      beforeEach((done) => {
+        stub = sinon.stub(picasa, 'executeRequest')
+        stub.callsArgWithAsync(2, null, '')
+
+        const accessToken = 'ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw'
+        const albumId = 'anAlbumId'
+        const photoId = 'aPhotoId'
+
+        picasa.deletePhoto(accessToken, albumId, photoId, (error) => {
+          expect(error).to.be.equals(null)
+
+          done()
+        })
+      })
+
+      afterEach(() => stub.restore())
+
+      it('should make delete request', () => {
+        const firstArgument = stub.args[0][0]
+
+        expect(firstArgument).to.be.eql('del')
+      })
+
+      it('should prepare headers request and the URL', () => {
+        const secondArgument = stub.args[0][1]
+
+        expect(secondArgument).to.be.eql({
+          "headers": {
+            'If-Match': '*'
+          },
+          url : "https://picasaweb.google.com/data/entry/api/user/default/albumid/anAlbumId/photoid/aPhotoId?alt=json&access_token=ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw"
+        })
+      })
+    })
+  })
+
   describe('postPhoto', () => {
     describe('on success', () => {
       const fakeSuccessBody = {
