@@ -8,9 +8,8 @@ const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
 const GOOGLE_API_HOST = 'https://www.googleapis.com'
 const GOOGLE_API_PATH = '/oauth2/v3/token'
 
-const PICASA_HOST = 'https://picasaweb.google.com'
-const PICASA_SCOPE = '/data'
-const PICASA_API_PATH = '/feed/api/user/default'
+const PICASA_SCOPE = 'https://picasaweb.google.com/data'
+const PICASA_API_FEED_PATH = '/feed/api/user/default'
 const PICASA_API_ENTRY_PATH = '/entry/api/user/default'
 
 const FETCH_AS_JSON = 'json'
@@ -34,7 +33,7 @@ function deletePhoto (accessToken, albumId, photoId, callback) {
   })
 
   const requestOptions = {
-    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_ENTRY_PATH}/albumid/${albumId}/photoid/${photoId}?${requestQuery}`,
+    url : `${PICASA_SCOPE}${PICASA_API_ENTRY_PATH}/albumid/${albumId}/photoid/${photoId}?${requestQuery}`,
     headers: {
       'If-Match': '*'
     }
@@ -56,7 +55,7 @@ function postPhoto (accessToken, albumId, photoData, callback) {
                         </entry>`
 
   const requestOptions = {
-    url       : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}/albumid/${albumId}?${requestQuery}`,
+    url       : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}/albumid/${albumId}?${requestQuery}`,
     multipart : [
       {'Content-Type' : 'application/atom+xml', body : photoInfoAtom},
       {'Content-Type' : photoData.contentType, body : photoData.binary}
@@ -86,7 +85,7 @@ function getPhotos (accessToken, options, callback) {
   const requestQuery = querystring.stringify(accessTokenParams)
 
   const requestOptions = {
-    url : `${PICASA_HOST}${PICASA_SCOPE}${PICASA_API_PATH}?${requestQuery}`,
+    url : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}?${requestQuery}`,
     headers: {
       'GData-Version': '2'
     }
@@ -133,7 +132,7 @@ function getPhotoByEntry (entry) {
 function getAuthURL (config) {
   const authenticationParams = {
     access_type   : 'offline',
-    scope         : `${PICASA_HOST}${PICASA_SCOPE}`,
+    scope         : `${PICASA_SCOPE}`,
     response_type : 'code',
     client_id     : config.clientId,
     redirect_uri  : config.redirectURI
