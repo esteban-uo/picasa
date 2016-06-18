@@ -22,9 +22,39 @@ Picasa.prototype.getPhotos = getPhotos
 Picasa.prototype.postPhoto = postPhoto
 Picasa.prototype.deletePhoto = deletePhoto
 
+Picasa.prototype.getAlbums = getAlbums
+
 // Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
+
+function getAlbums (accessToken, options, callback) {
+  const accessTokenParams = {
+    alt          : FETCH_AS_JSON,
+    access_token : accessToken
+  }
+
+  options = options || {}
+
+  const requestQuery = querystring.stringify(accessTokenParams)
+
+  const requestOptions = {
+    url : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}?${requestQuery}`,
+    headers: {
+      'GData-Version': '2'
+    }
+  }
+
+  this.executeRequest('get', requestOptions, (error, body) => {
+    if (error) return callback(error)
+
+    const albums = body.feed.entry.map(
+      entry => parseEntry(entry, albumSchema)
+    )
+
+    callback(null, albums)
+  })
+}
 
 function deletePhoto (accessToken, albumId, photoId, callback) {
   const requestQuery = querystring.stringify({
@@ -65,7 +95,7 @@ function postPhoto (accessToken, albumId, photoData, callback) {
   this.executeRequest('post', requestOptions, (error, body) => {
     if (error) return callback(error)
 
-    const photo = getPhotoByEntry(body.entry)
+    const photo = parseEntry(body.entry, photoSchema)
 
     callback(error, photo)
   })
@@ -94,10 +124,23 @@ function getPhotos (accessToken, options, callback) {
   this.executeRequest('get', requestOptions, (error, body) => {
     if (error) return callback(error)
 
-    const photos = body.feed.entry.map(getPhotoByEntry)
+    const photos = body.feed.entry.map(
+      entry => parseEntry(entry, photoSchema)
+    )
 
     callback(null, photos)
   })
+}
+
+const albumSchema = {
+  'gphoto$id'                : 'id',
+  'gphoto$name'              : 'name',
+  'gphoto$numphotos'         : 'num_photos',
+  'published'                : 'published',
+  'title'                    : 'title',
+  'summary'                  : 'summary',
+  'gphoto$location'          : 'location',
+  'gphoto$nickname'          : 'nickname'
 }
 
 const photoSchema = {
@@ -117,13 +160,17 @@ const photoSchema = {
   'summary'                  : 'summary'
 }
 
-function getPhotoByEntry (entry) {
+function parseEntry (entry, schema) {
   let photo = {}
 
-  Object.keys(photoSchema).forEach(schemaKey => {
-    const key = photoSchema[schemaKey]
+  Object.keys(schema).forEach(schemaKey => {
+    const key = schema[schemaKey]
 
-    if (key) photo[key] = checkParam(entry[schemaKey])
+    if (key) {
+      const value = checkParam(entry[schemaKey]);
+
+      photo[key] = value;
+    }
   })
 
   return photo
