@@ -1,6 +1,6 @@
 {
   "name": "picasa",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Picasa web albums client for node",
   "main": "src/picasa.js",
   "scripts": {
