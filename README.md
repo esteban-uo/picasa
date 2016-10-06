@@ -32,7 +32,7 @@ const picasa = new Picasa()
 ```js
 
 const options = {     
-  'max-results' : 10 // by default get all
+  maxResults : 10 // by default get all
 }
 
 picasa.getPhotos(accessToken, options, (error, photos) => {
