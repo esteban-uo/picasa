@@ -33,6 +33,7 @@ const picasa = new Picasa()
 
 const options = {     
   maxResults : 10 // by default get all
+  albumId : "6338620891611370881" // by default all photos are selected
 }
 
 picasa.getPhotos(accessToken, options, (error, photos) => {
