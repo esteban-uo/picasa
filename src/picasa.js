@@ -112,10 +112,12 @@ function getPhotos (accessToken, options, callback) {
 
   if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
 
+  const albumPart = options.albumId ? `/albumid/${options.albumId}` : '';
+  
   const requestQuery = querystring.stringify(accessTokenParams)
 
   const requestOptions = {
-    url : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}?${requestQuery}`,
+    url : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}${albumPart}?${requestQuery}`,
     headers: {
       'GData-Version': '2'
     }
