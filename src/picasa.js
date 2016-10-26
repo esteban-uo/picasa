@@ -82,7 +82,7 @@ function createAlbum (accessToken, albumData, callback) {
                             xmlns:media='http://search.yahoo.com/mrss/'
                             xmlns:gphoto='http://schemas.google.com/photos/2007'>
                           <title type='text'>${albumData.title}</title>
-                          <summary type='text'>${albumData.title}</summary>
+                          <summary type='text'>${albumData.summary}</summary>
                           <gphoto:access>private</gphoto:access>
                           <category scheme='http://schemas.google.com/g/2005#kind'
                             term='http://schemas.google.com/photos/2007#album'></category>
