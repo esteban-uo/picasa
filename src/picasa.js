@@ -21,8 +21,8 @@ function Picasa () {
 Picasa.prototype.getPhotos = getPhotos
 Picasa.prototype.postPhoto = postPhoto
 Picasa.prototype.deletePhoto = deletePhoto
-
 Picasa.prototype.getAlbums = getAlbums
+Picasa.prototype.createAlbum = createAlbum
 
 // Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
@@ -70,6 +70,37 @@ function deletePhoto (accessToken, albumId, photoId, callback) {
   }
 
   this.executeRequest('del', requestOptions, callback)
+}
+
+function createAlbum (accessToken, albumData, callback) {
+  const requestQuery = querystring.stringify({
+    alt          : FETCH_AS_JSON,
+    access_token : accessToken
+  })
+
+  const albumInfoAtom = `<entry xmlns='http://www.w3.org/2005/Atom'
+                            xmlns:media='http://search.yahoo.com/mrss/'
+                            xmlns:gphoto='http://schemas.google.com/photos/2007'>
+                          <title type='text'>${albumData.title}</title>
+                          <summary type='text'>${albumData.summary}</summary>
+                          <gphoto:access>private</gphoto:access>
+                          <category scheme='http://schemas.google.com/g/2005#kind'
+                            term='http://schemas.google.com/photos/2007#album'></category>
+                         </entry>`
+
+  const requestOptions = {
+    url       : `${PICASA_SCOPE}${PICASA_API_FEED_PATH}?${requestQuery}`,
+    body      : albumInfoAtom,
+    headers   : {'Content-Type': 'application/atom+xml'}
+  }
+
+  this.executeRequest('post', requestOptions, (error, body) => {
+    if (error) return callback(error)
+
+    const album = parseEntry(body.entry, albumSchema)
+
+    callback(error, album)
+  })
 }
 
 function postPhoto (accessToken, albumId, photoData, callback) {
