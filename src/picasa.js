@@ -7,6 +7,7 @@ const executeRequest = require('./executeRequest')
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
 const GOOGLE_API_HOST = 'https://www.googleapis.com'
 const GOOGLE_API_PATH = '/oauth2/v3/token'
+const GOOGLE_API_PATH_NEW = '/oauth2/v4/token'
 
 const PICASA_SCOPE = 'https://picasaweb.google.com/data'
 const PICASA_API_FEED_PATH = '/feed/api/user/default'
@@ -27,6 +28,7 @@ Picasa.prototype.createAlbum = createAlbum
 // Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
 Picasa.prototype.getAccessToken = getAccessToken
+Picasa.prototype.renewAccessToken = renewAccessToken
 
 function getAlbums (accessToken, options, callback) {
   const accessTokenParams = {
@@ -143,8 +145,8 @@ function getPhotos (accessToken, options, callback) {
 
   if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
 
-  const albumPart = options.albumId ? `/albumid/${options.albumId}` : '';
-  
+  const albumPart = options.albumId ? `/albumid/${options.albumId}` : ''
+
   const requestQuery = querystring.stringify(accessTokenParams)
 
   const requestOptions = {
@@ -240,7 +242,27 @@ function getAccessToken (config, code, callback) {
   this.executeRequest('post', options, (error, body) => {
     if (error) return callback(error)
 
-    callback(null, body.access_token)
+    callback(null, body.access_token, body.refresh_token)
+  })
+}
+
+function renewAccessToken (config, refresh_token, callback){
+  const refreshTokenParams = {
+    grant_type: 'refresh_token',
+    client_id: config.clientId,
+    client_secret: config.clientSecret,
+    refresh_token: refresh_token
+  }
+
+  const requestQuery = querystring.stringify(refreshTokenParams)
+  const options = {
+    url: `${GOOGLE_API_HOST}${GOOGLE_API_PATH_NEW}?${requestQuery}`
+  }
+
+  this.executeRequest('post', options, (error, body) => {
+    if (error) return callback(error)
+
+      callback(null, body.access_token)
   })
 }
 
