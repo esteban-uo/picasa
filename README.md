@@ -31,7 +31,7 @@ const picasa = new Picasa()
 
 ```js
 
-const options = {     
+const options = {
   maxResults : 10 // by default get all
   albumId : "6338620891611370881" // by default all photos are selected
 }
@@ -66,6 +66,28 @@ picasa.deletePhoto(accessToken, albumId, photoId, (error) => {
 })
 ```
 
+### Albums
+#### Get
+```js
+const options = {}
+
+picasa.getAlbums(accessToken, options,  (error, albums) => {
+  console.log(error, albums)
+})
+```
+
+#### Create
+```js
+const albumData = {
+  title: 'My first album',
+  summary: 'First album with Picasa API'
+}
+
+picasa.createAlbum(accessToken, albumData,  (error, albums) => {
+  console.log(error, albums)
+})
+```
+
 ### Auth
 
 To get an access token follow the next flow:
@@ -96,10 +118,33 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-picasa.getAccessToken(config, code, (error, accessToken) => {
+picasa.getAccessToken(config, code, (error, accessToken, refreshToken) => {
+  console.log(error, accessToken, refreshToken)
+})
+```
+
+5.If you need to renew an expired `accessToken` use the `refreshToken` with `renewAccessToken`:
+
+```js
+const config = {
+  clientId     : 'yourClientId',
+  redirectURI  : 'redirectURI'
+  clientSecret : 'yourClientSecret'
+}
+
+picasa.renewAccessToken(config, refreshToken, (error, accessToken) => {
   console.log(error, accessToken)
 })
 ```
+
+Change Log
+-------
+***16/05/2017***: Get album, Create Album, Renew access token added. Get Photos can get all photos from an album id or all.
+
+Contributors
+-------
+Thanks to
+[z1c0](https://github.com/z1c0), [hbakhtiyor](https://github.com/hbakhtiyor), [pauarge](https://github.com/pauarge), [wreuven](https://github.com/wreuven)
 
 License
 -------
