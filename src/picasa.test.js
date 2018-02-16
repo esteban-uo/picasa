@@ -54,7 +54,16 @@ describe('Picasa', () => {
             },
             "gphoto$nickname":{  
                "$t":"BobDeBouwer"
-            }
+            },
+            "media$group":{
+              "media$thumbnail":[  
+                 {  
+                    "url":"https://lh3.googleusercontent.com/-kyCVqkqZt3A/WA61zE/AAAAAAE0/d3cg_CP_Te41PxQJQ1ASGp4r2hGzH_TrgCHMYCg/s160-c/6401011308785",
+                    "height":160,
+                    "width":160
+                 }
+              ]
+           }
          }
         ]
       }
@@ -94,7 +103,7 @@ describe('Picasa', () => {
       expect(albums[0].location).to.be.equals('Utrecht')
       expect(albums[0].rights).to.be.equals('protected')
       expect(albums[0].access).to.be.equals('protected')
-
+      expect(albums[0].thumbnail[0].url).to.be.equals('https://lh3.googleusercontent.com/-kyCVqkqZt3A/WA61zE/AAAAAAE0/d3cg_CP_Te41PxQJQ1ASGp4r2hGzH_TrgCHMYCg/s160-c/6401011308785')
     })
 
     it('should make a get request', () => {

@@ -169,6 +169,7 @@ function getPhotos (accessToken, options, callback) {
 }
 
 const albumSchema = {
+  'media$group.media$thumbnail' : 'thumbnail',
   'gphoto$id'                : 'id',
   'gphoto$name'              : 'name',
   'gphoto$numphotos'         : 'num_photos',
@@ -205,13 +206,20 @@ function parseEntry (entry, schema) {
     const key = schema[schemaKey]
 
     if (key) {
-      const value = checkParam(entry[schemaKey]);
-
+      const value = extractValue(entry, schemaKey, key);
       photo[key] = value;
     }
   })
 
   return photo
+}
+
+function extractValue(entry, schemaKey){
+  if(schemaKey.indexOf('.') !== -1){
+    const tempKey = schemaKey.split('.')[0];
+    return extractValue(checkParam(entry[tempKey]), schemaKey.replace(`${tempKey}.`, ''));
+  }
+  return checkParam(entry[schemaKey]);
 }
 
 function getAuthURL (config) {
