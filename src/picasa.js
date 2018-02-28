@@ -145,6 +145,7 @@ function getPhotos (accessToken, options, callback) {
 
   if (options.maxResults) accessTokenParams['max-results'] = options.maxResults
   if (options.startIndex) accessTokenParams['start-index'] = options.startIndex
+  if (options.imgMax) accessTokenParams['imgmax'] = options.imgMax
 
   const albumPart = options.albumId ? `/albumid/${options.albumId}` : ''
 
