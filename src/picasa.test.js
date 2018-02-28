@@ -20,6 +20,100 @@ describe('Picasa', () => {
 
   beforeEach(() => picasa = new Picasa())
 
+  describe('getAlbums', () => {
+    const fakeSuccessBody = {
+      "feed":{
+        "entry":[
+          {
+            "published":{  
+               "$t":"2017-03-24T10:33:16.000Z"
+            },
+            "title":{  
+               "$t":"A test album"
+            },
+            "summary":{  
+               "$t":"Not much"
+            },
+            "rights":{  
+               "$t":"protected"
+            },
+            "gphoto$id":{  
+               "$t":"6401011366244305685"
+            },
+            "gphoto$name":{  
+               "$t":"6401011366244308786"
+            },
+            "gphoto$location":{  
+               "$t":"Utrecht"
+            },
+            "gphoto$access":{  
+               "$t":"protected"
+            },
+            "gphoto$numphotos":{  
+               "$t":420
+            },
+            "gphoto$nickname":{  
+               "$t":"BobDeBouwer"
+            }
+         }
+        ]
+      }
+    }
+
+    let albums
+
+    beforeEach((done) => {
+      stub = sinon.stub(picasa, 'executeRequest')
+      stub.callsArgWithAsync(2, null, fakeSuccessBody)
+
+      const accessToken = 'ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw'
+
+      picasa.getAlbums(accessToken, null, (error, albumsResponse) => {
+        expect(error).to.be.equals(null)
+        albums = albumsResponse
+
+        done()
+      })
+    })
+
+    afterEach(() => stub.restore())
+
+    it('returns an array of albums', () => {
+      expect(albums).to.be.an('Array')
+    })
+
+    it('returns albums with its props', () => {
+      expect(albums.length).to.be.equals(1)
+      expect(albums[0].title).to.be.equals('A test album')
+      expect(albums[0].nickname).to.be.equals('BobDeBouwer')
+      expect(albums[0].id).to.be.equals('6401011366244305685')
+      expect(albums[0].name).to.be.equals('6401011366244308786')
+      expect(albums[0].num_photos).to.be.equals(420)
+      expect(albums[0].published).to.be.equals('2017-03-24T10:33:16.000Z')
+      expect(albums[0].summary).to.be.equals('Not much')
+      expect(albums[0].location).to.be.equals('Utrecht')
+      expect(albums[0].rights).to.be.equals('protected')
+      expect(albums[0].access).to.be.equals('protected')
+
+    })
+
+    it('should make a get request', () => {
+      const firstArgument = stub.args[0][0]
+
+      expect(firstArgument).to.be.eql('get')
+    })
+
+    it('should add a header and prepared URL to the request', () => {
+      const secondArgument = stub.args[0][1]
+
+      expect(secondArgument).to.be.eql({
+        headers : { 'GData-Version': "2" },
+        url     : "https://picasaweb.google.com/data/feed/api/user/default?alt=json&access_token=ya29.OwJqqa1Y2tivkkCWWvA8vt5ltKsdf9cDQ5IRNrTbIt-mcfr5xNj4dQu41K6hZa7lX9O-gw"
+      })
+    })
+
+  })
+
   describe('getPhotos', () => {
     describe('on success', () => {
       const fakeSuccessBody = {

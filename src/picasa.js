@@ -177,7 +177,9 @@ const albumSchema = {
   'title'                    : 'title',
   'summary'                  : 'summary',
   'gphoto$location'          : 'location',
-  'gphoto$nickname'          : 'nickname'
+  'gphoto$nickname'          : 'nickname',
+  'rights'                   : 'rights',
+  'gphoto$access'            : 'access'
 }
 
 const photoSchema = {
