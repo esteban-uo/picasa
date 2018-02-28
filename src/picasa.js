@@ -2,6 +2,7 @@
 
 const querystring = require('querystring')
 
+const promisify = require('./promisify')
 const executeRequest = require('./executeRequest')
 
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
@@ -19,16 +20,31 @@ function Picasa () {
   this.executeRequest = executeRequest
 }
 
-Picasa.prototype.getPhotos = getPhotos
-Picasa.prototype.postPhoto = postPhoto
-Picasa.prototype.deletePhoto = deletePhoto
-Picasa.prototype.getAlbums = getAlbums
-Picasa.prototype.createAlbum = createAlbum
-
+// TODO: replace prototype usage with class friendly
+// TODO: promisify with easier interface
+Picasa.prototype.getPhotos = function() {
+  return promisify.bind(this)(getPhotos, arguments)
+}
+Picasa.prototype.postPhoto = function() {
+  return promisify.bind(this)(postPhoto, arguments)
+}
+Picasa.prototype.deletePhoto = function() {
+  return promisify.bind(this)(deletePhoto, arguments)
+}
+Picasa.prototype.getAlbums = function() {
+  return promisify.bind(this)(getAlbums, arguments)
+}
+Picasa.prototype.createAlbum = function() {
+  return promisify.bind(this)(createAlbum, arguments)
+}
 // Auth utilities
 Picasa.prototype.getAuthURL = getAuthURL
-Picasa.prototype.getAccessToken = getAccessToken
-Picasa.prototype.renewAccessToken = renewAccessToken
+Picasa.prototype.getAccessToken = function() {
+  return promisify.bind(this)(getAccessToken, arguments)
+}
+Picasa.prototype.renewAccessToken = function() {
+  return promisify.bind(this)(renewAccessToken, arguments)
+}
 
 function getAlbums (accessToken, options, callback) {
   const accessTokenParams = {
