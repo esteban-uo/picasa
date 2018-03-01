@@ -16,34 +16,66 @@ const PICASA_API_ENTRY_PATH = '/entry/api/user/default'
 
 const FETCH_AS_JSON = 'json'
 
-function Picasa () {
-  this.executeRequest = executeRequest
-}
+/** Main class */
+class Picasa {
+  /**
+   * Creates an instance of Picasa.
+   * @example 
+   * const Picasa = require('picasa')
+   * const picasa = new Picasa()
+   * // **NOTE**: Every Picasa API request requires an access token.
+   * @memberof Picasa
+   */
+  constructor() {
+    this.executeRequest = executeRequest;
+  }
 
-// TODO: replace prototype usage with class friendly
-// TODO: promisify with easier interface
-Picasa.prototype.getPhotos = function() {
-  return promisify.bind(this)(getPhotos, arguments)
-}
-Picasa.prototype.postPhoto = function() {
-  return promisify.bind(this)(postPhoto, arguments)
-}
-Picasa.prototype.deletePhoto = function() {
-  return promisify.bind(this)(deletePhoto, arguments)
-}
-Picasa.prototype.getAlbums = function() {
-  return promisify.bind(this)(getAlbums, arguments)
-}
-Picasa.prototype.createAlbum = function() {
-  return promisify.bind(this)(createAlbum, arguments)
-}
-// Auth utilities
-Picasa.prototype.getAuthURL = getAuthURL
-Picasa.prototype.getAccessToken = function() {
-  return promisify.bind(this)(getAccessToken, arguments)
-}
-Picasa.prototype.renewAccessToken = function() {
-  return promisify.bind(this)(renewAccessToken, arguments)
+  /**
+   * Get Photos
+   * @param {string} accessToken - See {@link Picasa#getAccessToken}
+   * @param {object}  options - Can be empty object
+   * @param {integer} options.maxResults -  By default get all photos
+   * @param {string}  options.albumId -  By default all photos are selected
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
+  getPhotos() {
+    return promisify.bind(this)(getPhotos, arguments);
+  }
+  postPhoto() {
+    return promisify.bind(this)(postPhoto, arguments);
+  }
+  deletePhoto() {
+    return promisify.bind(this)(deletePhoto, arguments);
+  }
+  getAlbums() {
+    return promisify.bind(this)(getAlbums, arguments);
+  }
+  createAlbum() {
+    return promisify.bind(this)(createAlbum, arguments);
+  }
+  /**
+   * Get Access Token
+   */
+  getAccessToken() {
+    return promisify.bind(this)(getAccessToken, arguments);
+  }
+  renewAccessToken() {
+    return promisify.bind(this)(renewAccessToken, arguments);
+  }
+  getAuthURL(config) {
+    const authenticationParams = {
+      access_type: 'offline',
+      scope: `${PICASA_SCOPE}`,
+      response_type: 'code',
+      client_id: config.clientId,
+      redirect_uri: config.redirectURI
+    }
+
+    const authenticationQuery = querystring.stringify(authenticationParams)
+
+    return `${GOOGLE_AUTH_ENDPOINT}?${authenticationQuery}`
+  }
 }
 
 function getAlbums (accessToken, options, callback) {
@@ -69,7 +101,6 @@ function getAlbums (accessToken, options, callback) {
     const albums = body.feed.entry.map(
       entry => parseEntry(entry, albumSchema)
     )
-
     callback(null, albums)
   })
 }
