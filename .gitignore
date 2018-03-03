@@ -1,3 +1,4 @@
 node_modules
 npm-debug.log
 examples/config.js
+.DS_Store

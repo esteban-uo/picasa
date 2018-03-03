@@ -1,12 +1,16 @@
 {
   "name": "picasa",
   "version": "1.0.6",
+  "engines": {
+    "node": ">=4.8.7"
+  },
   "description": "Picasa web albums client for node",
   "main": "src/picasa.js",
   "scripts": {
     "test": "mocha src/ --harmony",
     "test-debug": "mocha src/ --harmony -t 6000  --debug-brk",
-    "test-watch": "mocha src/ --harmony --watch"
+    "test-watch": "mocha src/ --harmony --watch",
+    "docs": "jsdoc --readme README.md src/picasa.js -d docs"
   },
   "repository": {
     "type": "git",
@@ -22,13 +26,14 @@
     "node"
   ],
   "author": "Esteban Uscanga Olea <uscanga47@gmail.com> (https://github.com/esteban-uo)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/esteban-uo/picasa/issues"
   },
   "homepage": "https://github.com/esteban-uo/picasa#readme",
   "devDependencies": {
     "chai": "^3.4.1",
+    "jsdoc": "^3.5.5",
     "mocha": "^2.3.3",
     "rewire": "^2.5.0",
     "sinon": "^1.17.2",

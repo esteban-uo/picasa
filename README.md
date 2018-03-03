@@ -1,45 +1,21 @@
-CI
---
+<img src="https://www.google.com/photos/about/static/images/ui/logo-photos.png" style="display: block; margin-left: auto; margin-right: auto;">
 
 [![Build Status](https://travis-ci.org/esteban-uo/picasa.svg)](https://travis-ci.org/esteban-uo/picasa)
 
-A simple Picasa Web Albums client (2.0) for nodejs. Includes Auth helpers.
+A simple Picasa Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth helpers.
 
-Install
--------
+### Install
 
+```
+$ yarn add  picasa
+```
+or
 ```
 $ npm install --save picasa
 ```
 
-Usage
------
-
-(Check out the examples dir too, rename config.example.json > config.json and add your credentials)
-
-```js
-const Picasa = require('picasa')
-
-const picasa = new Picasa()
-```
-
-**NOTE**: Every Picasa API request requires an access token.
-
-### Photos
-
-#### Get
-
-```js
-
-const options = {
-  maxResults : 10 // by default get all
-  albumId : "6338620891611370881" // by default all photos are selected
-}
-
-picasa.getPhotos(accessToken, options, (error, photos) => {
-  console.log(error, photos)
-})
-```
+### Docs
+Documentation is found [here](./docs) and for examples, check out the examples dir too, rename config.example.json > config.json and add your credentials.
 
 #### Post
 
