@@ -1,11 +1,11 @@
-<img src="https://www.google.com/photos/about/static/images/ui/logo-photos.png" style="display: block; margin-left: auto; margin-right: auto;">
-
 [![Build Status](https://travis-ci.org/esteban-uo/picasa.svg)](https://travis-ci.org/esteban-uo/picasa)
 
 A simple Picasa Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth helpers.
 
-### Install
+<img src="https://www.google.com/photos/about/static/images/ui/logo-photos.png" style="display: block; margin-left: auto; margin-right: auto;">
 
+
+### Install
 ```
 $ yarn add  picasa
 ```
@@ -14,55 +14,15 @@ or
 $ npm install --save picasa
 ```
 
+### Usage
+```js
+const Picasa = require('picasa')
+
+const picasa = new Picasa()
+```
+
 ### Docs
-Documentation is found [here](./docs) and for examples, check out the examples dir too, rename config.example.json > config.json and add your credentials.
-
-#### Post
-
-Where binary is the binary's file and the albumId the album id to be stored.
-
-```js
-const photoData = {
-  title       : 'A title',
-  summary     : 'Summary or description',
-  contentType : 'image/jpeg',             // image/bmp, image/gif, image/png
-  binary      : binary
-}
-
-picasa.postPhoto(accessToken, albumId, photoData, (error, photo) => {
-  console.log(error, photo)
-})
-```
-
-#### Delete
-
-```js
-picasa.deletePhoto(accessToken, albumId, photoId, (error) => {
-  console.log(error)
-})
-```
-
-### Albums
-#### Get
-```js
-const options = {}
-
-picasa.getAlbums(accessToken, options,  (error, albums) => {
-  console.log(error, albums)
-})
-```
-
-#### Create
-```js
-const albumData = {
-  title: 'My first album',
-  summary: 'First album with Picasa API'
-}
-
-picasa.createAlbum(accessToken, albumData,  (error, albums) => {
-  console.log(error, albums)
-})
-```
+API for Photos, Albums and Auth can be found [here](./docs). Please check out also the examples dir for more detailed examples. Rename `config.example.json` to `config.json` and add your own config data.
 
 ### Auth
 

@@ -20,11 +20,6 @@ const FETCH_AS_JSON = 'json'
 class Picasa {
   /**
    * Creates an instance of Picasa.
-   * @example 
-   * const Picasa = require('picasa')
-   * const picasa = new Picasa()
-   * // **NOTE**: Every Picasa API request requires an access token.
-   * @memberof Picasa
    */
   constructor() {
     this.executeRequest = executeRequest;
@@ -42,27 +37,89 @@ class Picasa {
   getPhotos() {
     return promisify.bind(this)(getPhotos, arguments);
   }
+  /**
+   * Create Photos
+   * @param {string} accessToken - See {@link Picasa#getAccessToken}
+   * @param {string} albumId
+   * @param {object} photoData - Photo's propperties 
+   * @param {string} photoData.title
+   * @param {string} photoData.summary
+   * @param {string} photoData.contentType - image/bmp, image/gif, image/png
+   * @param {blob}  photoData.binary -  Blob binary
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   postPhoto() {
     return promisify.bind(this)(postPhoto, arguments);
   }
+  /**
+   * Delete Photo
+   * @param {string} accessToken - See {@link Picasa#getAccessToken}
+   * @param {string} albumId
+   * @param {string} photoId
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   deletePhoto() {
     return promisify.bind(this)(deletePhoto, arguments);
   }
+  /**
+   * Get all Albums
+   * @param {string} accessToken - See {@link Picasa#getAccessToken}
+   * @param {object}  options - Can be empty object
+   * @param {integer} options.TODO -  TODO
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   getAlbums() {
     return promisify.bind(this)(getAlbums, arguments);
   }
+  /**
+   * Create an albums
+   * @param {string} accessToken - See {@link Picasa#getAccessToken}
+   * @param {object}  albumData - Can be empty object
+   * @param {string} albumData.title
+   * @param {string} albumData.summary
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   createAlbum() {
     return promisify.bind(this)(createAlbum, arguments);
   }
   /**
-   * Get Access Token
+   * Get access token
+   * @param {object} config - Get config here: {@link https://console.developers.google.com/home/dashboard} (API Manager > Credentials)
+   * @param {string} config.clientId
+   * @param {string} config.redirectURI - URL that user was redirected. After google displays a consent screen to the user, user will be redirect to this URL with a `code` in the URL
+   * @param {string} config.clientSecret
+   * @param {string} code - Get code from URL param, when user is redirected from authURL. See {@link Picasa#getAuthURL}
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
    */
   getAccessToken() {
     return promisify.bind(this)(getAccessToken, arguments);
   }
+  /**
+   * Renews access token
+   * @param {object} config - Get config here: {@link https://console.developers.google.com/home/dashboard} (API Manager > Credentials)
+   * @param {string} config.clientId
+   * @param {string} config.redirectURI - URL that user was redirected. After google displays a consent screen to the user, user will be redirect to this URL with a `code` in the URL
+   * @param {string} config.clientSecret
+   * @param {string} refreshToken - The refreshToken is retrived after getAccessToken is executed. See {@link Picasa#getAccessToken}
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   renewAccessToken() {
     return promisify.bind(this)(renewAccessToken, arguments);
   }
+  /**
+   * Get Auth URL
+   * @param {object} config - Get config here: https://console.developers.google.com/home/dashboard (API Manager > Credentials)
+   * @param {string} config.clientId
+   * @param {string} config.redirectURI - URL to user will be redirected. After google displays a consent screen to the user, user will be redirect to this URL with a `code` in the URL
+   * @param {function} callback - (error, response). If not provided, a promise will be returned
+   * @returns {Promise}
+   */
   getAuthURL(config) {
     const authenticationParams = {
       access_type: 'offline',
