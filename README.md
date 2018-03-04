@@ -4,7 +4,6 @@ A simple Picasa Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth hel
 
 <img src="https://www.google.com/photos/about/static/images/ui/logo-photos.png" style="display: block; margin-left: auto; margin-right: auto;">
 
-
 ### Install
 ```
 $ yarn add  picasa
@@ -54,12 +53,12 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-picasa.getAccessToken(config, code, (error, accessToken, refreshToken) => {
-  console.log(error, accessToken, refreshToken)
+picasa.getTokens(config, code).then(tokens => {
+  /* use tokens.accessToken or tokens.refreshToken */
 })
 ```
 
-5.If you need to renew an expired `accessToken` use the `refreshToken` with `renewAccessToken`:
+5.If you need to renew an expired `accessToken`, use the `refreshToken` with `picasa.renewAccessToken`:
 
 ```js
 const config = {
@@ -68,14 +67,16 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-picasa.renewAccessToken(config, refreshToken, (error, accessToken) => {
-  console.log(error, accessToken)
+picasa.renewAccessToken(config, refreshToken).then(renewedAccessToken => {
+  /* do something with renewedAccessToken */
 })
 ```
 
 Change Log
 -------
-***16/05/2017***: Get album, Create Album, Renew access token added. Get Photos can get all photos from an album id or all.
+***1.0.7*** Functions return a Promise if callback is not provided. Use `getTokens` if you want to use Promises instead `getAccessToken`.
+
+***1.0.6*** Get album, Create Album, Renew access token added. Get Photos can get all photos from an album id or all.
 
 Contributors
 -------

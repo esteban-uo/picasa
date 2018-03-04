@@ -10,7 +10,7 @@
     "test": "mocha src/ --harmony",
     "test-debug": "mocha src/ --harmony -t 6000  --debug-brk",
     "test-watch": "mocha src/ --harmony --watch",
-    "docs": "jsdoc --readme README.md src/picasa.js -d docs"
+    "docs": "jsdoc --configure .jsdoc.json src/picasa.js -t docs/template"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
     "mocha": "^2.3.3",
     "rewire": "^2.5.0",
     "sinon": "^1.17.2",
