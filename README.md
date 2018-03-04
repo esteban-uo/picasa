@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/esteban-uo/picasa.svg)](https://travis-ci.org/esteban-uo/picasa)
 
-A simple Picasa Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth helpers.
+A simple **Google Photos**, formally **Picasa** Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth helpers.
 
-<img src="https://www.google.com/photos/about/static/images/ui/logo-photos.png" style="display: block; margin-left: auto; margin-right: auto;">
+<img src="https://www.wptribe.net/wp-content/uploads/2013/01/Picasa_Logo.jpg" />
 
 ### Install
 ```
