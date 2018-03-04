@@ -81,7 +81,7 @@ Change Log
 Contributors
 -------
 Thanks to
-[z1c0](https://github.com/z1c0), [hbakhtiyor](https://github.com/hbakhtiyor), [pauarge](https://github.com/pauarge), [wreuven](https://github.com/wreuven)
+[z1c0](https://github.com/z1c0), [hbakhtiyor](https://github.com/hbakhtiyor), [pauarge](https://github.com/pauarge), [wreuven](https://github.com/wreuven), [imrvelj](https://github.com/imrvelj), [jlengrand](https://github.com/jlengrand)
 
 License
 -------
