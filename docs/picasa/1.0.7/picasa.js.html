@@ -1,4 +1,45 @@
-'use strict'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>picasa.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Picasa.html">Picasa</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#createAlbum">createAlbum</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#deletePhoto">deletePhoto</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#getAlbums">getAlbums</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#getAuthURL">getAuthURL</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#getPhotos">getPhotos</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#getTokens">getTokens</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#postPhoto">postPhoto</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Picasa.html#renewAccessToken">renewAccessToken</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#getAccessToken">getAccessToken</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">picasa.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict'
 
 const querystring = require('querystring')
 
@@ -192,15 +233,15 @@ function createAlbum(accessToken, albumData, callback) {
     access_token: accessToken
   })
 
-  const albumInfoAtom = `<entry xmlns='http://www.w3.org/2005/Atom'
+  const albumInfoAtom = `&lt;entry xmlns='http://www.w3.org/2005/Atom'
                             xmlns:media='http://search.yahoo.com/mrss/'
                             xmlns:gphoto='http://schemas.google.com/photos/2007'>
-                          <title type='text'>${albumData.title}</title>
-                          <summary type='text'>${albumData.summary}</summary>
-                          <gphoto:access>private</gphoto:access>
-                          <category scheme='http://schemas.google.com/g/2005#kind'
-                            term='http://schemas.google.com/photos/2007#album'></category>
-                         </entry>`
+                          &lt;title type='text'>${albumData.title}&lt;/title>
+                          &lt;summary type='text'>${albumData.summary}&lt;/summary>
+                          &lt;gphoto:access>private&lt;/gphoto:access>
+                          &lt;category scheme='http://schemas.google.com/g/2005#kind'
+                            term='http://schemas.google.com/photos/2007#album'>&lt;/category>
+                         &lt;/entry>`
 
   const requestOptions = {
     url: `${PICASA_SCOPE}${PICASA_API_FEED_PATH}?${requestQuery}`,
@@ -223,11 +264,11 @@ function postPhoto(accessToken, albumId, photoData, callback) {
     access_token: accessToken
   })
 
-  const photoInfoAtom = `<entry xmlns="http://www.w3.org/2005/Atom">
-                          <title>${photoData.title}</title>
-                          <summary>${photoData.summary}</summary>
-                          <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/photos/2007#photo"/>
-                        </entry>`
+  const photoInfoAtom = `&lt;entry xmlns="http://www.w3.org/2005/Atom">
+                          &lt;title>${photoData.title}&lt;/title>
+                          &lt;summary>${photoData.summary}&lt;/summary>
+                          &lt;category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/photos/2007#photo"/>
+                        &lt;/entry>`
 
   const requestOptions = {
     url: `${PICASA_SCOPE}${PICASA_API_FEED_PATH}/albumid/${albumId}?${requestQuery}`,
@@ -425,3 +466,22 @@ function isValidType(value) {
 }
 
 module.exports = Picasa
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Mar 04 2018 20:34:29 GMT+0100 (CET) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

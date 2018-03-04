@@ -1,92 +1,27 @@
-CI
---
-
 [![Build Status](https://travis-ci.org/esteban-uo/picasa.svg)](https://travis-ci.org/esteban-uo/picasa)
 
-A simple Picasa Web Albums client (2.0) for nodejs. Includes Auth helpers.
+A simple **Google Photos**, formally **Picasa** Web Albums client (2.0) for nodejs (>= 4.8.7). Includes Auth helpers.
 
-Install
--------
+<img src="https://www.wptribe.net/wp-content/uploads/2013/01/Picasa_Logo.jpg" />
 
+### Install
+```
+$ yarn add  picasa
+```
+or
 ```
 $ npm install --save picasa
 ```
 
-Usage
------
-
-(Check out the examples dir too, rename config.example.json > config.json and add your credentials)
-
+### Usage
 ```js
 const Picasa = require('picasa')
 
 const picasa = new Picasa()
 ```
 
-**NOTE**: Every Picasa API request requires an access token.
-
-### Photos
-
-#### Get
-
-```js
-
-const options = {
-  maxResults : 10 // by default get all
-  albumId : "6338620891611370881" // by default all photos are selected
-}
-
-picasa.getPhotos(accessToken, options, (error, photos) => {
-  console.log(error, photos)
-})
-```
-
-#### Post
-
-Where binary is the binary's file and the albumId the album id to be stored.
-
-```js
-const photoData = {
-  title       : 'A title',
-  summary     : 'Summary or description',
-  contentType : 'image/jpeg',             // image/bmp, image/gif, image/png
-  binary      : binary
-}
-
-picasa.postPhoto(accessToken, albumId, photoData, (error, photo) => {
-  console.log(error, photo)
-})
-```
-
-#### Delete
-
-```js
-picasa.deletePhoto(accessToken, albumId, photoId, (error) => {
-  console.log(error)
-})
-```
-
-### Albums
-#### Get
-```js
-const options = {}
-
-picasa.getAlbums(accessToken, options,  (error, albums) => {
-  console.log(error, albums)
-})
-```
-
-#### Create
-```js
-const albumData = {
-  title: 'My first album',
-  summary: 'First album with Picasa API'
-}
-
-picasa.createAlbum(accessToken, albumData,  (error, albums) => {
-  console.log(error, albums)
-})
-```
+### Docs
+API for Photos, Albums and Auth can be found [here](./docs). Please check out also the examples dir for more detailed examples. Rename `config.example.json` to `config.json` and add your own config data.
 
 ### Auth
 
@@ -118,12 +53,12 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-picasa.getAccessToken(config, code, (error, accessToken, refreshToken) => {
-  console.log(error, accessToken, refreshToken)
+picasa.getTokens(config, code).then(tokens => {
+  /* use tokens.accessToken or tokens.refreshToken */
 })
 ```
 
-5.If you need to renew an expired `accessToken` use the `refreshToken` with `renewAccessToken`:
+5.If you need to renew an expired `accessToken`, use the `refreshToken` with `picasa.renewAccessToken`:
 
 ```js
 const config = {
@@ -132,14 +67,16 @@ const config = {
   clientSecret : 'yourClientSecret'
 }
 
-picasa.renewAccessToken(config, refreshToken, (error, accessToken) => {
-  console.log(error, accessToken)
+picasa.renewAccessToken(config, refreshToken).then(renewedAccessToken => {
+  /* do something with renewedAccessToken */
 })
 ```
 
 Change Log
 -------
-***16/05/2017***: Get album, Create Album, Renew access token added. Get Photos can get all photos from an album id or all.
+***1.0.7*** Functions return a Promise if callback is not provided. Use `getTokens` if you want to use Promises instead `getAccessToken`.
+
+***1.0.6*** Get album, Create Album, Renew access token added. Get Photos can get all photos from an album id or all.
 
 Contributors
 -------
