@@ -126,7 +126,7 @@ class Picasa {
    * @param {string} config.clientId
    * @param {string} config.redirectURI - URL to user will be redirected. After google displays a consent screen to the user, user will be redirect to this URL with a `code` in the URL
    * @param {function} callback - (error, response). If not provided, a promise will be returned
-   * @returns {Promise}
+   * @returns {string}
    */
   getAuthURL(config) {
     const authenticationParams = {

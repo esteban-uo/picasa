@@ -1,6 +1,6 @@
 {
   "name": "picasa",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "engines": {
     "node": ">=4.8.7"
   },
@@ -26,6 +26,9 @@
     "node"
   ],
   "author": "Esteban Uscanga Olea <uscanga47@gmail.com> (https://github.com/esteban-uo)",
+  "contributors": [
+    "Julien Lengrand-Lambert <julien@lengrand.fr> (http://lengrand.fr)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/esteban-uo/picasa/issues"
